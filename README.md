@@ -9,9 +9,14 @@ NOTE: If you are using Windows remember to add the VLC path to your Environment 
 ## Example usage ##
 
 ```ruby
-load "speech.rb"
-beep(600, 200)
+# Import library
+require 'rubysounds'
+
+# Speak a string with Google voice
 speak('Hello Ruby')
+
+# Make a beep (only on Windows systems)
+beep(600, 200)
 ```
 
 ## Credits ##
