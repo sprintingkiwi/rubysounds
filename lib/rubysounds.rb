@@ -1,7 +1,18 @@
 require 'net/http'
-require 'win32/sound'
-include Win32
 
+# Check actual OS
+$operative_system = 'other'
+if Gem.win_platform?
+	$operative_system = 'win'
+end
+
+# Import Windows-specific libraries
+if $operative_system == 'win'
+	require 'win32/sound'
+	include Win32
+end
+
+# Class for text-to-speech using Google Translate
 class Speech
 	GOOGLE_TRANSLATE_URL = 'http://translate.google.com/translate_tts'.freeze
 
@@ -70,14 +81,39 @@ class Speech
 	end
 end
 
-def speak(text)
-  Speech.new(text).save('temp.wav')
-  #system 'vlc/vlc.exe --intf dummy temp.wav'
-  system 'vlc --play-and-exit --intf dummy temp.wav'
-  #pid = fork{ exec 'mpg123','-q', temp.wav }
-  #Sound.play("temp.wav")
+
+def vlcplay(target)
+	system('vlc --play-and-exit --intf dummy ' + target)
 end
 
+
+def speak(text)
+	Speech.new(text).save('temp.wav')
+	system('vlc --play-and-exit --intf dummy temp.wav')
+end
+
+
+def dub(text)
+	puts(text)
+	speak(text)
+end
+
+
+def play(path)
+	vlcplay(path)
+end
+
+
+# Windows-specific methods
 def beep(a, b)
-  Sound.beep(a, b)
+	if $operative_system == 'win'
+		Sound.beep(a, b)
+	else
+		dub('the beep method is only avaible on Windows operative system')
+	end
+end
+
+
+def ms_win_play(path)
+	Sound.play(path)
 end
