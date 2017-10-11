@@ -3,8 +3,13 @@ Ruby library to manage sounds using Google Translate &amp; command line VLC.
 
 ## How do I get set up? ##
 
-You need to install VLC (https://www.videolan.org/vlc/index.it.html)
-NOTE: If you are using Windows remember to add the VLC path to your Environment Variables
+1. You need to install VLC (https://www.videolan.org/vlc/index.it.html)
+
+2. In your terminal (or command prompt): `gem install rubysounds`
+
+NOTES for Windows users:
+* Remember to add the VLC path to your Environment Variables.
+* You may also want to: `gem install win32-sound`
 
 ## Example usage ##
 
