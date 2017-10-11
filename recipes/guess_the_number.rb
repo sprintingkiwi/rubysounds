@@ -2,10 +2,10 @@ require 'rubysounds'
 
 speak 'Hello, I am Ruby'
 speak 'What is your name?'
+
 name = gets.chomp
 
 speak 'Nice to meet you, ' + name
-
 speak 'Do you want to play a game?'
 
 if gets.chomp == 'yes'
