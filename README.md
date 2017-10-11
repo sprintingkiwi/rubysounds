@@ -26,6 +26,7 @@ speak('Hello Ruby')
 # Make a beep (only on Windows systems)
 beep(600, 200)
 ```
+You can find other examples [here](https://github.com/sprintingkiwi/rubysounds/tree/master/examples)
 
 ## Credits ##
 
