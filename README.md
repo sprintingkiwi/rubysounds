@@ -12,6 +12,9 @@ NOTE: If you are using Windows remember to add the VLC path to your Environment 
 # Import library
 require 'rubysounds'
 
+# Play audio or video file
+play('path_to_file')
+
 # Speak a string with Google voice
 speak('Hello Ruby')
 
