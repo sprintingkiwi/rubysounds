@@ -12,7 +12,7 @@ if gets.chomp == 'yes'
 
 	# Guess the number game
 	speak 'guess the number between 0 and 99'
-	number = rand(0..99)
+	number = rand 0..99
 	answer = gets.chomp.to_i
 
 	while answer != number
