@@ -11,23 +11,23 @@ speak 'Do you want to play a game?'
 if gets.chomp == 'yes'
 
 	# Guess the number game
-	speak 'guess the number between 0 and 99'
+	speak 'Guess the number between 0 and 99'
 	number = rand 0..99
 	answer = gets.chomp.to_i
 
 	while answer != number
-		speak 'wrong'
+		speak 'Wrong'
 
 		if answer > number
-			speak 'too high'
+			speak 'Too high'
 		else
-			speak 'too low'
+			speak 'Too low'
 		end
 		
 		answer = gets.chomp.to_i
 	end
 
-	speak 'Great! It was' + answer.to_s
+	speak 'Great! It was ' + answer.to_s
 
 end
 
