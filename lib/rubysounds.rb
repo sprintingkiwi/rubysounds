@@ -90,6 +90,7 @@ end
 def speak(text)
 	Speech.new(text).save('temp.wav')
 	system('vlc --play-and-exit --intf dummy temp.wav')
+	File.delete('temp.wav')
 end
 
 
