@@ -82,14 +82,26 @@ class Speech
 end
 
 
-def vlcplay(target)
-	system('vlc --play-and-exit --intf dummy ' + target)
+def vlcplay(target, wait=true, bg=false)
+
+	if bg	
+		vlccmd = 'vlc -I null --play-and-exit '
+	else
+		vlccmd = 'vlc --play-and-exit --intf dummy '
+	end
+	
+	if wait
+		system(vlccmd + target)
+	else
+		Thread.new { system(vlccmd + target) }		
+	end
+
 end
 
 
-def speak(text)
+def speak(text, wait=true, bg=false)
 	Speech.new(text).save('temp.wav')
-	system('vlc --play-and-exit --intf dummy temp.wav')
+	vlcplay('temp.wav', wait, bg)
 	File.delete('temp.wav')
 end
 
@@ -100,8 +112,8 @@ def dub(text)
 end
 
 
-def play(path)
-	vlcplay(path)
+def play(path, wait=true, bg=false)
+	vlcplay(path, wait, bg)
 end
 
 
