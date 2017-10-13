@@ -130,7 +130,7 @@ def vlcplay(target, wait: true, bg: false, dummy: true)
 			vlccmd += "--intf dummy "
 		end
 	else
-		vlccmd = "cvlc "	
+		vlccmd = "cvlc --play-and-exit "	
 	end
 	
 	io = IO.popen(vlccmd + target)
