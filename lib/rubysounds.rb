@@ -131,6 +131,7 @@ def vlcplay(target, wait: true, bg: false, dummy: true)
 		end
 	else
 		vlccmd = "cvlc "	
+	end
 	
 	io = IO.popen(vlccmd + target)
 	$children_sounds.push(io)
