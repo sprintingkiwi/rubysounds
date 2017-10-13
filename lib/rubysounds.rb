@@ -100,7 +100,7 @@ trap "SIGINT" do
 	puts "Exiting"
 	# Kill all children sounds	
 	for child_sound in $children_sounds	
-		puts child_sound.pid
+		#puts child_sound.pid
 		# Kill child process...
 		#Process.kill("QUIT", child_sound.pid)
 		if $operative_system == "win"
@@ -108,6 +108,7 @@ trap "SIGINT" do
 		else
 			system("kill " + child_sound.pid.to_s)
 		end
+		#$children_sounds.delete(child_sound)
 		# This prevents the process from becoming defunct
 		#child_sound.close
 	end	
