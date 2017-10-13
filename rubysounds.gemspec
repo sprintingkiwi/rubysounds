@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name        = 'rubysounds'
-  s.version     = '0.3'
-  s.date        = '2017-10-11'
+  s.version     = '0.4'
+  s.date        = '2017-10-14'
   s.summary     = "Ruby gem to reproduce sounds"
   s.description = "Ruby library to manage sounds using Google Translate & command line VLC."
   s.authors     = ["Alessandro Norfo"]
