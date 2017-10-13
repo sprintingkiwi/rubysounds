@@ -1,4 +1,5 @@
 require "net/http"
+require "slave"
 
 # Check actual OS
 $operative_system = "other"
@@ -14,7 +15,8 @@ if $operative_system == "win"
 		include Win32
 		$winlib = true
 	rescue LoadError
-		puts "win32-sound gem not installed"
+		#puts "win32-sound gem not installed"
+		puts ""
 	end
 end
 
@@ -88,26 +90,61 @@ class Speech
 end
 
 
-def vlcplay(target, wait: true, bg: false)
+#########################################################
 
-	# Play in background option
-	if bg	
-		vlccmd = "vlc -I null --play-and-exit "
-	else
-		vlccmd = "vlc --play-and-exit --intf dummy "
-	end
-	
-	# Wait for the sound to end option
-	if wait
-		system(vlccmd + target)
-	else
-		Thread.new { system(vlccmd + target) }		
-	end
 
+# Array to store VLC sound processes
+$children_sounds = Array.new
+
+# Catching CTRL-C Keyboard Interrupt signal
+trap "SIGINT" do
+	puts "Exiting"
+	# Kill all children sounds	
+	for child_sound in $children_sounds	
+		puts child_sound.pid
+		# Kill child process...
+		#Process.kill("QUIT", child_sound.pid)
+		if $operative_system == "win"
+			system("Taskkill /PID " + child_sound.pid.to_s + " /F")
+		else
+			system("kill " + child_sound.pid.to_s)
+		end
+		# This prevents the process from becoming defunct
+		#child_sound.close
+	end	
+	#exit 130
 end
 
 
-def speak(text, language: "en", wait: true, bg: false)
+def vlcplay(target, wait: true, bg: false, dummy: true)
+
+	# Play in background option
+	vlccmd = "vlc "
+	if bg	
+		vlccmd += "-I null "
+	end
+	
+	vlccmd += "--play-and-exit "
+	
+	if (bg == false) && (dummy == true)
+		vlccmd += "--intf dummy "
+	end
+	
+	
+	io = IO.popen(vlccmd + target)
+	$children_sounds.push(io)
+	# Wait for the sound to end option
+	if wait
+		Process.wait(io.pid)
+	end
+	
+	#system(vlccmd + target)
+	#Thread.new { system(vlccmd + target) }
+	
+end
+
+
+def speak(text, language: "en", wait: true, bg: true)
 	Speech.new(text, language).save("temp.wav")
 	vlcplay("temp.wav", wait: wait, bg: bg)
 	File.delete("temp.wav")
@@ -120,7 +157,7 @@ def dub(text)
 end
 
 
-def play(path, wait: true, bg: false)
+def play(path, wait: true, bg: true)
 	vlcplay(path, wait: wait, bg: bg)
 end
 
@@ -133,6 +170,8 @@ def beep(a, b)
 		else
 			dub("the beep method is only avaible on Windows operative system")
 		end
+	else
+		dub("Beep is not avaible. You need to gem install win32-sounds")
 	end
 end
 
@@ -140,5 +179,7 @@ end
 def ms_win_play(path)
 	if $winlib
 		Sound.play(path)
+	else
+		dub("Beep is not avaible. You need to gem install win32-sounds")
 	end
 end
