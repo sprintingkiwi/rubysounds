@@ -1,31 +1,31 @@
-require 'net/http'
+require "net/http"
 
 # Check actual OS
-$operative_system = 'other'
+$operative_system = "other"
 if Gem.win_platform?
-	$operative_system = 'win'
+	$operative_system = "win"
 end
 
 # Import Windows-specific libraries
-if $operative_system == 'win'
-	require 'win32/sound'
+if $operative_system == "win"
+	require "win32/sound"
 	include Win32
 end
 
 # Class for text-to-speech using Google Translate
 class Speech
-	GOOGLE_TRANSLATE_URL = 'http://translate.google.com/translate_tts'.freeze
+	GOOGLE_TRANSLATE_URL = "http://translate.google.com/translate_tts".freeze
 
 	attr_accessor :text, :lang
 
-	def initialize(text, lang = 'en')
+	def initialize(text, lang = "en")
 	  @text = text
 	  @lang = lang
 	end
 
-	def self.load(file_path, lang = 'en')
+	def self.load(file_path, lang = "en")
 	  f = File.open(file_path)
-	  new f.read.encode('UTF-16be', invalid: :replace, replace: '?').encode('UTF-8'), lang
+	  new f.read.encode("UTF-16be", invalid: :replace, replace: "?").encode("UTF-8"), lang
 	end
 
 	def save(file_path)
@@ -39,14 +39,14 @@ class Speech
 
 	  sentences.each_with_index do |q, _idx|
 		uri.query = URI.encode_www_form(
-		  ie: 'UTF-8',
+		  ie: "UTF-8",
 		  q: q,
 		  tl: lang,
 		  total: sentences.length,
 		  idx: 0,
 		  textlen: q.length,
-		  client: 'tw-ob',
-		  prev: 'input'
+		  client: "tw-ob",
+		  prev: "input"
 		)
 
 		res = Net::HTTP.get_response(uri)
@@ -56,7 +56,7 @@ class Speech
 		response << res.body.force_encoding(Encoding::UTF_8)
 	  end
 
-	  File.open(file_path, 'wb') do |f|
+	  File.open(file_path, "wb") do |f|
 		f.write response.join
 		return f.path
 	  end
@@ -82,14 +82,16 @@ class Speech
 end
 
 
-def vlcplay(target, wait=true, bg=false)
+def vlcplay(target, wait: true, bg: false)
 
+	# Play in background option
 	if bg	
-		vlccmd = 'vlc -I null --play-and-exit '
+		vlccmd = "vlc -I null --play-and-exit "
 	else
-		vlccmd = 'vlc --play-and-exit --intf dummy '
+		vlccmd = "vlc --play-and-exit --intf dummy "
 	end
 	
+	# Wait for the sound to end option
 	if wait
 		system(vlccmd + target)
 	else
@@ -99,10 +101,10 @@ def vlcplay(target, wait=true, bg=false)
 end
 
 
-def speak(text, wait=true, bg=false)
-	Speech.new(text).save('temp.wav')
-	vlcplay('temp.wav', wait, bg)
-	File.delete('temp.wav')
+def speak(text, language: "en", wait: true, bg: false)
+	Speech.new(text, language).save("temp.wav")
+	vlcplay("temp.wav", wait: wait, bg: bg)
+	File.delete("temp.wav")
 end
 
 
@@ -112,17 +114,17 @@ def dub(text)
 end
 
 
-def play(path, wait=true, bg=false)
-	vlcplay(path, wait, bg)
+def play(path, wait: true, bg: false)
+	vlcplay(path, wait: wait, bg: bg)
 end
 
 
 # Windows-specific methods
 def beep(a, b)
-	if $operative_system == 'win'
+	if $operative_system == "win"
 		Sound.beep(a, b)
 	else
-		dub('the beep method is only avaible on Windows operative system')
+		dub("the beep method is only avaible on Windows operative system")
 	end
 end
 
