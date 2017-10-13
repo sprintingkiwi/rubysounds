@@ -1,5 +1,4 @@
 require "net/http"
-require "slave"
 
 # Check actual OS
 $operative_system = "other"
