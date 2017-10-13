@@ -117,18 +117,20 @@ end
 
 def vlcplay(target, wait: true, bg: false, dummy: true)
 
-	# Play in background option
-	vlccmd = "vlc "
-	if bg	
-		vlccmd += "-I null "
-	end
-	
-	vlccmd += "--play-and-exit "
-	
-	if (bg == false) && (dummy == true)
-		vlccmd += "--intf dummy "
-	end
-	
+	# VLC command options
+	if $operative_system == "win"
+		vlccmd = "vlc "
+		if bg	
+			vlccmd += "-I null "
+		end
+		
+		vlccmd += "--play-and-exit "
+		
+		if (bg == false) && (dummy == true)
+			vlccmd += "--intf dummy "
+		end
+	else
+		vlccmd = "cvlc "	
 	
 	io = IO.popen(vlccmd + target)
 	$children_sounds.push(io)
