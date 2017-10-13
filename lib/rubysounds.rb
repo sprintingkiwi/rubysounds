@@ -112,7 +112,8 @@ trap "SIGINT" do
 		# This prevents the process from becoming defunct
 		#child_sound.close
 	end	
-	#exit 130
+	# Kill main process
+	exit 130
 end
 
 
