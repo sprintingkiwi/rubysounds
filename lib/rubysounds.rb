@@ -6,10 +6,16 @@ if Gem.win_platform?
 	$operative_system = "win"
 end
 
+$winlib = false
 # Import Windows-specific libraries
 if $operative_system == "win"
-	require "win32/sound"
-	include Win32
+	begin
+		require "win32/sound"
+		include Win32
+		$winlib = true
+	rescue LoadError
+		puts "win32-sound gem not installed"
+	end
 end
 
 # Class for text-to-speech using Google Translate
@@ -121,14 +127,18 @@ end
 
 # Windows-specific methods
 def beep(a, b)
-	if $operative_system == "win"
-		Sound.beep(a, b)
-	else
-		dub("the beep method is only avaible on Windows operative system")
+	if $winlib
+		if $operative_system == "win"
+			Sound.beep(a, b)
+		else
+			dub("the beep method is only avaible on Windows operative system")
+		end
 	end
 end
 
 
 def ms_win_play(path)
-	Sound.play(path)
+	if $winlib
+		Sound.play(path)
+	end
 end
