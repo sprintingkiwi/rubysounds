@@ -150,7 +150,7 @@ def play(target, wait: true, bg: true, dummy: true, volume: 100, loop: false)
 	end
 	
 	# DEBUG ONLY
-	puts(vlccmd)
+	#puts(vlccmd)
 	
 	io = IO.popen(vlccmd + target)
 	$children_sounds.push(io)
