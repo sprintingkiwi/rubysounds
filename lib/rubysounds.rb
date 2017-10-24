@@ -95,8 +95,7 @@ end
 # Array to store VLC sound processes
 $children_sounds = Array.new
 
-# Catching CTRL-C Keyboard Interrupt signal
-trap "SIGINT" do
+def killallsounds
 	puts "Exiting"
 	# Kill all children sounds	
 	for child_sound in $children_sounds	
@@ -116,8 +115,17 @@ trap "SIGINT" do
 	exit 130
 end
 
+# Catching CTRL-C Keyboard Interrupt signal
+Signal.trap('INT') do
+	killallsounds
+end
+# Catching QUIT signal
+Signal.trap('TERM') do
+	killallsounds
+end
 
-def vlcplay(target, wait: true, bg: false, dummy: true)
+
+def vlcplay(target, wait: true, bg: false, dummy: true, volume: 100, loop: false)
 
 	# VLC command options
 	if $operative_system == "win"
@@ -135,6 +143,11 @@ def vlcplay(target, wait: true, bg: false, dummy: true)
 		vlccmd = "cvlc --play-and-exit "	
 	end
 	
+	vlccmd += "--directx-volume " + (volume.to_f/100).to_s + " "
+	
+	#DEBUG ONLY
+	#puts(vlccmd)
+	
 	io = IO.popen(vlccmd + target)
 	$children_sounds.push(io)
 	# Wait for the sound to end option
@@ -148,9 +161,9 @@ def vlcplay(target, wait: true, bg: false, dummy: true)
 end
 
 
-def speak(text, language: "en", wait: true, bg: true)
+def speak(text, language: "en", wait: true, bg: true, volume: 100)
 	Speech.new(text, language).save("temp.wav")
-	vlcplay("temp.wav", wait: wait, bg: bg)
+	vlcplay("temp.wav", wait: wait, bg: bg, volume: volume)
 	File.delete("temp.wav")
 end
 
@@ -161,8 +174,8 @@ def dub(text)
 end
 
 
-def play(path, wait: true, bg: true)
-	vlcplay(path, wait: wait, bg: bg)
+def play(path, wait: true, bg: true, volume: 100)
+	vlcplay(path, wait: wait, bg: bg, volume: volume)
 end
 
 
