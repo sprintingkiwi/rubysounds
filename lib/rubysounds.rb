@@ -125,7 +125,7 @@ Signal.trap('TERM') do
 end
 
 
-def vlcplay(target, wait: true, bg: false, dummy: true, volume: 100, loop: false)
+def play(target, wait: true, bg: true, dummy: true, volume: 100, loop: false)
 
 	# VLC command options
 	if $operative_system == "win"
@@ -145,8 +145,12 @@ def vlcplay(target, wait: true, bg: false, dummy: true, volume: 100, loop: false
 	
 	vlccmd += "--directx-volume " + (volume.to_f/100).to_s + " "
 	
-	#DEBUG ONLY
-	#puts(vlccmd)
+	if loop
+		vlccmd += "--loop "
+	end
+	
+	# DEBUG ONLY
+	puts(vlccmd)
 	
 	io = IO.popen(vlccmd + target)
 	$children_sounds.push(io)
@@ -161,9 +165,9 @@ def vlcplay(target, wait: true, bg: false, dummy: true, volume: 100, loop: false
 end
 
 
-def speak(text, language: "en", wait: true, bg: true, volume: 100)
+def speak(text, language: "en", wait: true, bg: true, volume: 100, loop: false)
 	Speech.new(text, language).save("temp.wav")
-	vlcplay("temp.wav", wait: wait, bg: bg, volume: volume)
+	play("temp.wav", wait: wait, bg: bg, volume: volume, loop: loop)
 	File.delete("temp.wav")
 end
 
@@ -174,9 +178,9 @@ def dub(text)
 end
 
 
-def play(path, wait: true, bg: true, volume: 100)
-	vlcplay(path, wait: wait, bg: bg, volume: volume)
-end
+#def play(path, wait: true, bg: true, volume: 100, loop: false)
+	#play(path, wait: wait, bg: bg, volume: volume, loop: loop)
+#end
 
 
 # Windows-specific methods
